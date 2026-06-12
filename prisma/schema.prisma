@@ -1,0 +1,93 @@
+// prisma/schema.prisma
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  password  String
+  role      String   @default("admin")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Restaurant {
+  id          String     @id @default(cuid())
+  name        String
+  slug        String     @unique
+  description String?
+  address     String?
+  phone       String?
+  email       String?
+  logoUrl     String?
+  coverUrl    String?
+  isActive    Boolean    @default(true)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  categories  Category[]
+  qrCodes     QRCode[]
+  scanLogs    ScanLog[]
+}
+
+model Category {
+  id           String     @id @default(cuid())
+  name         String
+  slug         String
+  icon         String?
+  sortOrder    Int        @default(0)
+  restaurantId String
+  restaurant   Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  menuItems    MenuItem[]
+
+  @@unique([restaurantId, slug])
+}
+
+model MenuItem {
+  id           String   @id @default(cuid())
+  name         String
+  description  String?
+  price        Float
+  imageUrl     String?
+  isVeg        Boolean  @default(true)
+  isAvailable  Boolean  @default(true)
+  isFeatured   Boolean  @default(false)
+  spiceLevel   Int?     @default(0)
+  categoryId   String
+  category     Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model QRCode {
+  id           String     @id @default(cuid())
+  restaurantId String
+  restaurant   Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  qrDataUrl    String
+  menuUrl      String
+  totalScans   Int        @default(0)
+  isActive     Boolean    @default(true)
+  createdAt    DateTime   @default(now())
+}
+
+model ScanLog {
+  id           String     @id @default(cuid())
+  restaurantId String
+  restaurant   Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  visitorId    String
+  ipAddress    String?
+  country      String?
+  city         String?
+  deviceType   String?
+  browser      String?
+  os           String?
+  referrer     String?
+  userAgent    String?
+  scannedAt    DateTime   @default(now())
+}
