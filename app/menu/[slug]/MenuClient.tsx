@@ -108,30 +108,19 @@ function MenuRow({ item, onImageClick }: { item: MenuItem; onImageClick: (item: 
           )}
         </div>
 
-        {/* Action Row - Spice levels & Add Button */}
-        <div className="mt-4 flex items-center justify-between gap-4 pt-3 border-t border-gray-100">
-          <div>
-            {item.spiceLevel && item.spiceLevel > 0 ? (
-              <div className="flex gap-0.5 items-center bg-orange-50 px-2 py-1 rounded-lg border border-orange-100">
-                {Array.from({ length: 3 }, (_, i) => (
-                  <Flame
-                    key={i}
-                    className={`w-3.5 h-3.5 ${i < item.spiceLevel! ? "text-orange-500 fill-orange-500" : "text-gray-300"}`}
-                  />
-                ))}
-              </div>
-            ) : (
-              <div />
-            )}
+        {/* Action Row - Spice levels */}
+        {item.spiceLevel && item.spiceLevel > 0 && (
+          <div className="mt-4 flex items-center justify-between gap-4 pt-3 border-t border-gray-100">
+            <div className="flex gap-0.5 items-center bg-orange-50 px-2 py-1 rounded-lg border border-orange-100">
+              {Array.from({ length: 3 }, (_, i) => (
+                <Flame
+                  key={i}
+                  className={`w-3.5 h-3.5 ${i < item.spiceLevel! ? "text-orange-500 fill-orange-500" : "text-gray-300"}`}
+                />
+              ))}
+            </div>
           </div>
-
-          <button
-            onClick={() => onImageClick(item)}
-            className="px-5 py-2 border border-[#FF7A00] text-[#FF7A00] hover:bg-[#FF7A00] hover:text-white rounded-xl text-sm font-bold transition-all active:scale-95 shadow-xs bg-white cursor-pointer"
-          >
-            + Add
-          </button>
-        </div>
+        )}
       </div>
 
     </div>
