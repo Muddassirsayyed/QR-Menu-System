@@ -104,7 +104,7 @@ function MenuRow({ item, onImageClick }: { item: MenuItem; onImageClick: (item: 
         </div>
 
         {/* Spice Level badge */}
-        {item.spiceLevel && item.spiceLevel > 0 && (
+        {item.spiceLevel !== null && item.spiceLevel > 0 && (
           <div className="mt-1.5 flex gap-0.5 items-center">
             {Array.from({ length: 3 }, (_, i) => (
               <Flame
@@ -458,7 +458,7 @@ export default function MenuClient({ restaurant }: { restaurant: Restaurant }) {
                 </span>
               </div>
 
-              {selectedItem.spiceLevel && selectedItem.spiceLevel > 0 && (
+              {selectedItem.spiceLevel !== null && selectedItem.spiceLevel > 0 && (
                 <div className="mt-2 flex items-center gap-1 bg-orange-50 border border-orange-100 px-2.5 py-1 rounded-lg w-max">
                   <span className="text-xs font-bold text-orange-600 mr-1">Spice Level:</span>
                   <div className="flex gap-0.5">
