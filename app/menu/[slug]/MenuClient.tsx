@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { Search, X, Leaf, Phone, MapPin, ChevronUp, UtensilsCrossed, Flame, Maximize2, Sparkles } from "lucide-react";
+import { Search, X, Leaf, Phone, MapPin, ChevronUp, UtensilsCrossed, Flame, Maximize2, Sparkles, QrCode } from "lucide-react";
 import { formatPrice } from "@/lib/utils";
 
 type MenuItem = {
@@ -58,11 +58,6 @@ function VegDot({ isVeg }: { isVeg: boolean }) {
     </span>
   );
 }
-
-type MenuRowProps = {
-  item: MenuItem;
-  onImageClick: (item: MenuItem) => void;
-};
 
 function MenuRow({ item, onImageClick }: { item: MenuItem; onImageClick: (item: MenuItem) => void }) {
   const thumbUrl = getThumbnailUrl(item.imageUrl);
@@ -157,7 +152,27 @@ export default function MenuClient({ restaurant }: { restaurant: Restaurant }) {
   const [vegOnly, setVegOnly] = useState(false);
   const [showScrollTop, setShowScrollTop] = useState(false);
   const [selectedItem, setSelectedItem] = useState<MenuItem | null>(null);
+  
+  // Share QR Code Modal States
+  const [showQrModal, setShowQrModal] = useState(false);
+  const [currentUrl, setCurrentUrl] = useState("");
+  const [copied, setCopied] = useState(false);
+
   const catRefs = useRef<Record<string, HTMLDivElement | null>>({});
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setCurrentUrl(window.location.href);
+    }
+  }, []);
+
+  const handleCopyLink = () => {
+    if (currentUrl) {
+      navigator.clipboard.writeText(currentUrl);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
+  };
 
   useEffect(() => {
     const visitorId =
@@ -216,19 +231,14 @@ export default function MenuClient({ restaurant }: { restaurant: Restaurant }) {
 
   return (
     <div className="min-h-screen bg-slate-50 pb-20 relative">
-      {/* Cover Banner */}
-      <div className="h-44 w-full bg-gradient-to-r from-slate-900 via-orange-950 to-slate-900 relative overflow-hidden">
-        {restaurant.coverUrl ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={restaurant.coverUrl}
-            alt={restaurant.name}
-            className="w-full h-full object-cover opacity-40 blur-xs"
-          />
-        ) : (
-          <div className="absolute inset-0 opacity-15 bg-[radial-gradient(#f97316_1px,transparent_1px)] [background-size:16px_16px]" />
-        )}
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-900 to-transparent" />
+      {/* Cover Banner with Spline 3D Particles */}
+      <div className="h-48 w-full bg-slate-950 relative overflow-hidden flex-shrink-0">
+        <iframe
+          src="https://my.spline.design/interactiveparticles-b43ecf482d0016cd08efc5520a7b45db/"
+          className="absolute inset-0 w-full h-full border-none pointer-events-none scale-105 opacity-70"
+          style={{ pointerEvents: "none" }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/10 to-transparent" />
       </div>
 
       {/* Restaurant Info Layered Card */}
@@ -237,12 +247,25 @@ export default function MenuClient({ restaurant }: { restaurant: Restaurant }) {
           <div className="flex items-start gap-4">
             <RestaurantLogo src={restaurant.logoUrl} name={restaurant.name} />
             <div className="flex-1 min-w-0">
-              <h1 className="text-2xl font-black text-slate-900 leading-tight tracking-tight flex items-center gap-2">
-                {restaurant.name}
-              </h1>
-              {restaurant.description && (
-                <p className="text-sm text-slate-500 mt-1 leading-relaxed">{restaurant.description}</p>
-              )}
+              <div className="flex items-start justify-between gap-2">
+                <div>
+                  <h1 className="text-2xl font-black text-slate-900 leading-tight tracking-tight">
+                    {restaurant.name}
+                  </h1>
+                  {restaurant.description && (
+                    <p className="text-sm text-slate-500 mt-1 leading-relaxed">{restaurant.description}</p>
+                  )}
+                </div>
+                {/* Show QR Action */}
+                <button
+                  onClick={() => setShowQrModal(true)}
+                  className="flex items-center gap-1.5 bg-orange-50 hover:bg-orange-100 text-orange-600 font-extrabold px-3 py-2 rounded-2xl text-xs transition-all shadow-xs border border-orange-100/50 cursor-pointer flex-shrink-0"
+                  title="Show Menu QR Code"
+                >
+                  <QrCode className="w-4 h-4" />
+                  <span>Show QR</span>
+                </button>
+              </div>
               
               <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 mt-3 text-xs text-slate-400">
                 {restaurant.address && (
@@ -461,6 +484,48 @@ export default function MenuClient({ restaurant }: { restaurant: Restaurant }) {
                   </p>
                 </div>
               )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Share QR Modal */}
+      {showQrModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm animate-fade-in">
+          <div className="relative w-full max-w-sm bg-white rounded-3xl p-6 shadow-2xl border border-slate-100 animate-zoom-in">
+            <button
+              onClick={() => setShowQrModal(false)}
+              className="absolute right-4 top-4 bg-slate-100 hover:bg-slate-200 text-slate-500 rounded-full p-2 transition-colors cursor-pointer"
+            >
+              <X className="w-4 h-4" />
+            </button>
+
+            <div className="text-center mt-2">
+              <h3 className="text-lg font-black text-slate-900">Share QR Menu</h3>
+              <p className="text-xs text-slate-400 mt-1">Scan to view the live digital menu</p>
+            </div>
+
+            <div className="bg-slate-50 border border-slate-100 rounded-2xl p-4 my-5 flex items-center justify-center min-h-[220px]">
+              {currentUrl ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={`https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(currentUrl)}`}
+                  alt="Restaurant Menu QR Code"
+                  className="w-48 h-48 object-contain"
+                />
+              ) : (
+                <div className="w-8 h-8 border-3 border-orange-500 border-t-transparent rounded-full animate-spin" />
+              )}
+            </div>
+
+            <div className="p-3 bg-slate-50 border border-slate-100 rounded-2xl flex items-center justify-between gap-3">
+              <span className="text-xs text-slate-500 font-semibold truncate flex-1">{currentUrl}</span>
+              <button
+                onClick={handleCopyLink}
+                className="bg-orange-500 hover:bg-orange-600 text-white font-bold px-3 py-1.5 rounded-xl text-xs transition-all flex-shrink-0 cursor-pointer"
+              >
+                {copied ? "Copied!" : "Copy Link"}
+              </button>
             </div>
           </div>
         </div>
