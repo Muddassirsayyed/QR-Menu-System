@@ -54,71 +54,64 @@ function MenuRow({ item, onImageClick }: { item: MenuItem; onImageClick: (item: 
   const displayPrice = `₹${Math.round(item.price)}`;
 
   return (
-    <div className="flex flex-col sm:flex-row gap-6 p-5 sm:p-6 bg-white rounded-[24px] border border-black/[0.03] shadow-[0_4px_20px_rgba(0,0,0,0.01)] hover:shadow-[0_8px_30px_rgba(0,0,0,0.02)] transition-all duration-300 group relative overflow-hidden">
+    <div 
+      onClick={() => onImageClick(item)}
+      className="flex gap-3.5 sm:gap-4 p-3 bg-white rounded-2xl border border-black/[0.03] shadow-[0_4px_18px_rgba(0,0,0,0.01)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.02)] hover:-translate-y-0.5 transition-all duration-300 group relative overflow-hidden items-center cursor-pointer"
+    >
       
-      {/* Food Image - Top on mobile, Left on desktop */}
+      {/* Food Image - Left side (only if imageUrl is present) */}
       {item.imageUrl && (
-        <div className="w-full sm:w-48 h-48 sm:h-48 rounded-2xl overflow-hidden relative flex-shrink-0 bg-gray-50 border border-gray-100 shadow-xs self-center">
+        <div className="w-[90px] h-[90px] sm:w-[110px] sm:h-[110px] rounded-2xl overflow-hidden relative flex-shrink-0 bg-gray-50 border border-gray-100 shadow-2xs self-center">
           <Image
             src={item.imageUrl}
             alt={item.name}
             fill
-            sizes="(max-width: 640px) 100vw, 192px"
+            sizes="(max-width: 640px) 90px, 110px"
             className="object-cover transition-transform duration-500 group-hover:scale-105"
             loading="lazy"
           />
-          <button
-            onClick={() => onImageClick(item)}
-            className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity duration-300 cursor-pointer"
-          >
-            <Maximize2 className="w-6 h-6 text-white drop-shadow-md" />
-          </button>
         </div>
       )}
 
-      {/* Food Details - Right side / below image */}
-      <div className="flex-1 flex flex-col justify-between min-w-0">
+      {/* Food Details - Right side */}
+      <div className="flex-1 min-w-0 flex flex-col justify-center">
         <div>
-          {/* Badges */}
-          <div className="flex items-center gap-2 mb-2">
+          {/* Header line: VegDot + Name + Featured */}
+          <div className="flex items-center gap-1.5 flex-wrap">
             <VegDot isVeg={item.isVeg} />
+            <h3 className="font-semibold text-gray-900 text-[15px] sm:text-[18px] leading-tight group-hover:text-[#FF7A00] transition-colors truncate">
+              {item.name}
+            </h3>
             {item.isFeatured && (
-              <span className="inline-flex items-center gap-0.5 text-[9px] bg-gradient-to-r from-amber-500 to-orange-500 text-white font-bold px-2 py-0.5 rounded-full shadow-xs">
-                <Sparkles className="w-2.5 h-2.5" />
+              <span className="inline-flex items-center gap-0.5 text-[8px] sm:text-[9px] bg-gradient-to-r from-amber-500 to-orange-500 text-white font-bold px-1.5 py-0.5 rounded-full shadow-2xs">
+                <Sparkles className="w-2 h-2" />
                 Chef's Pick
               </span>
             )}
           </div>
 
-          {/* Name */}
-          <h3 className="font-bold text-gray-900 text-lg leading-snug group-hover:text-[#FF7A00] transition-colors">
-            {item.name}
-          </h3>
-
-          {/* Price - directly below name, color #FF7A00, font weight 700 */}
-          <div className="text-[#FF7A00] text-lg font-bold mt-1">
+          {/* Price - directly below name */}
+          <div className="text-[#FF7A00] text-sm sm:text-base font-bold mt-0.5 sm:mt-1">
             {displayPrice}
           </div>
 
           {/* Description */}
           {item.description && (
-            <p className="text-sm text-gray-500 mt-2.5 leading-relaxed">
+            <p className="text-[11px] sm:text-xs text-gray-500 mt-1 leading-relaxed line-clamp-2">
               {item.description}
             </p>
           )}
         </div>
 
-        {/* Action Row - Spice levels */}
+        {/* Spice Level badge */}
         {item.spiceLevel && item.spiceLevel > 0 && (
-          <div className="mt-4 flex items-center justify-between gap-4 pt-3 border-t border-gray-100">
-            <div className="flex gap-0.5 items-center bg-orange-50 px-2 py-1 rounded-lg border border-orange-100">
-              {Array.from({ length: 3 }, (_, i) => (
-                <Flame
-                  key={i}
-                  className={`w-3.5 h-3.5 ${i < item.spiceLevel! ? "text-orange-500 fill-orange-500" : "text-gray-300"}`}
-                />
-              ))}
-            </div>
+          <div className="mt-1.5 flex gap-0.5 items-center">
+            {Array.from({ length: 3 }, (_, i) => (
+              <Flame
+                key={i}
+                className={`w-3 h-3 ${i < item.spiceLevel! ? "text-orange-500 fill-orange-500" : "text-gray-300"}`}
+              />
+            ))}
           </div>
         )}
       </div>
@@ -395,7 +388,7 @@ export default function MenuClient({ restaurant }: { restaurant: Restaurant }) {
               )}
             </div>
           ) : (
-            <div className="space-y-10">
+            <div className="space-y-6">
               {displayCategories.map((cat) => (
                 <div
                   key={cat.id}
@@ -403,16 +396,15 @@ export default function MenuClient({ restaurant }: { restaurant: Restaurant }) {
                   className="scroll-mt-32"
                 >
                   {/* Category Header */}
-                  <div className="flex items-center gap-2 mb-4 pb-2 border-b border-gray-200">
+                  <div className="flex items-center gap-2 mb-2.5 pb-2 border-b border-gray-200">
                     {cat.icon && <span className="text-2xl">{cat.icon}</span>}
-                    <h2 className="font-bold text-gray-900 text-lg tracking-tight">{cat.name}</h2>
-                    <span className="ml-2 bg-gray-100 text-gray-600 font-bold px-2 py-0.5 rounded-md text-[10px]">
-                      {cat.menuItems.length}
-                    </span>
+                    <h2 className="font-bold text-gray-900 text-lg tracking-tight">
+                      {cat.name} ({cat.menuItems.length})
+                    </h2>
                   </div>
-
+ 
                   {/* Vertical Single-Column stacked list of cards */}
-                  <div className="space-y-4">
+                  <div className="space-y-2.5">
                     {cat.menuItems.map((item) => (
                       <MenuRow key={item.id} item={item} onImageClick={setSelectedItem} />
                     ))}

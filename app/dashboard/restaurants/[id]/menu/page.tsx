@@ -339,83 +339,93 @@ export default function MenuManagePage() {
 
       {/* Items by category */}
       {displayCategories.map((cat) => (
-        <div key={cat.id} className="card overflow-hidden">
-          <div className="px-5 py-3 border-b border-slate-100 dark:border-slate-700 flex items-center gap-2 bg-slate-50 dark:bg-slate-800/50">
+        <div key={cat.id} className="space-y-4">
+          <div className="flex items-center gap-2 px-1 pt-2">
             {cat.icon && <span className="text-lg">{cat.icon}</span>}
-            <h3 className="font-semibold text-slate-800 dark:text-white text-sm">{cat.name}</h3>
-            <span className="text-xs text-slate-400 ml-1">{cat.menuItems.length} items</span>
+            <h3 className="font-display font-bold text-slate-800 dark:text-slate-200 text-base">{cat.name}</h3>
+            <span className="text-xs text-slate-400 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-full font-medium">{cat.menuItems.length} items</span>
           </div>
 
           {cat.menuItems.length === 0 ? (
-            <div className="text-center py-8 text-slate-400 text-sm">
+            <div className="card p-8 text-center text-slate-400 text-sm">
               No items in this category
             </div>
           ) : (
-            <div className="divide-y divide-slate-50 dark:divide-slate-800">
+            <div className="grid gap-4">
               {cat.menuItems.map((item) => (
                 <div
                   key={item.id}
-                  className="flex items-center gap-4 px-5 py-3.5 hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors"
+                  className="card p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:shadow-md transition-all duration-200"
                 >
-                  {item.imageUrl && (
-                    <div className="relative w-14 h-14 rounded-xl overflow-hidden bg-slate-100 flex-shrink-0">
-                      <Image
-                        src={item.imageUrl}
-                        alt={item.name}
-                        fill
-                        className="object-cover"
-                        sizes="56px"
-                      />
-                    </div>
-                  )}
-
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 flex-wrap">
-                      <span className={`w-4 h-4 rounded border-2 flex items-center justify-center flex-shrink-0 ${item.isVeg ? "border-green-600 bg-green-50" : "border-red-600 bg-red-50"}`}>
-                        <span className={`w-1.5 h-1.5 rounded-full ${item.isVeg ? "bg-green-600" : "bg-red-600"}`} />
-                      </span>
-                      <span className="font-medium text-slate-900 dark:text-white text-sm">
-                        {item.name}
-                      </span>
-                      {item.isFeatured && (
-                        <span className="text-xs bg-orange-100 dark:bg-orange-500/20 text-orange-600 dark:text-orange-400 px-1.5 py-0.5 rounded-md font-medium">
-                          Featured
-                        </span>
-                      )}
-                      {!item.isAvailable && (
-                        <span className="text-xs bg-red-100 dark:bg-red-500/20 text-red-500 px-1.5 py-0.5 rounded-md">
-                          Unavailable
-                        </span>
-                      )}
-                    </div>
-                    {item.description && (
-                      <p className="text-xs text-slate-400 mt-0.5 line-clamp-1 pl-6">{item.description}</p>
+                  <div className="flex items-center gap-4 flex-1 min-w-0">
+                    {item.imageUrl ? (
+                      <div className="relative w-14 h-14 rounded-xl overflow-hidden bg-slate-100 dark:bg-slate-700 flex-shrink-0 border border-slate-200/50 dark:border-slate-700">
+                        <Image
+                          src={item.imageUrl}
+                          alt={item.name}
+                          fill
+                          className="object-cover"
+                          sizes="56px"
+                        />
+                      </div>
+                    ) : (
+                      <div className="w-14 h-14 rounded-xl bg-slate-100 dark:bg-slate-700 overflow-hidden flex-shrink-0 flex items-center justify-center border border-slate-200/50 dark:border-slate-700">
+                        <UtensilsCrossed className="w-6 h-6 text-slate-400" />
+                      </div>
                     )}
+
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className={`w-4 h-4 rounded border flex items-center justify-center flex-shrink-0 ${item.isVeg ? "border-green-500 bg-green-50" : "border-red-500 bg-red-50"}`}>
+                          <span className={`w-1.5 h-1.5 rounded-full ${item.isVeg ? "bg-green-500" : "bg-red-500"}`} />
+                        </span>
+                        <h4 className="font-semibold text-slate-900 dark:text-white text-sm">
+                          {item.name}
+                        </h4>
+                        {item.isFeatured && (
+                          <span className="text-[10px] bg-orange-100 dark:bg-orange-500/20 text-orange-600 dark:text-orange-400 px-2 py-0.5 rounded-full font-medium">
+                            Featured
+                          </span>
+                        )}
+                        {!item.isAvailable && (
+                          <span className="text-[10px] bg-red-100 dark:bg-red-500/20 text-red-500 px-2 py-0.5 rounded-full font-medium">
+                            Unavailable
+                          </span>
+                        )}
+                      </div>
+                      {item.description && (
+                        <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 line-clamp-1">{item.description}</p>
+                      )}
+                    </div>
                   </div>
 
-                  <div className="flex items-center gap-3 flex-shrink-0">
-                    <span className="font-bold text-slate-900 dark:text-white text-sm">
+                  <div className="flex items-center justify-between sm:justify-end gap-3 flex-shrink-0 pt-3 sm:pt-0 border-t sm:border-0 border-slate-100 dark:border-slate-800">
+                    <span className="font-bold text-slate-900 dark:text-white text-sm sm:mr-2">
                       {formatPrice(item.price)}
                     </span>
-                    <button
-                      onClick={() =>
-                        setEditItem({ ...item, categoryId: cat.id })
-                      }
-                      className="w-8 h-8 rounded-xl flex items-center justify-center bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-500 transition-all"
-                    >
-                      <Pencil className="w-3.5 h-3.5" />
-                    </button>
-                    <button
-                      onClick={() => handleDelete(item.id)}
-                      disabled={deleting === item.id}
-                      className="w-8 h-8 rounded-xl flex items-center justify-center bg-red-50 dark:bg-red-500/10 hover:bg-red-100 dark:hover:bg-red-500/20 text-red-500 transition-all disabled:opacity-50"
-                    >
-                      {deleting === item.id ? (
-                        <span className="w-3 h-3 border-2 border-red-400 border-t-transparent rounded-full animate-spin" />
-                      ) : (
-                        <Trash2 className="w-3.5 h-3.5" />
-                      )}
-                    </button>
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() =>
+                          setEditItem({ ...item, categoryId: cat.id })
+                        }
+                        className="w-8 h-8 rounded-xl flex items-center justify-center bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-500 transition-all"
+                        title="Edit"
+                      >
+                        <Pencil className="w-3.5 h-3.5" />
+                      </button>
+                      <button
+                        onClick={() => handleDelete(item.id)}
+                        disabled={deleting === item.id}
+                        className="w-8 h-8 rounded-xl flex items-center justify-center bg-red-50 dark:bg-red-500/10 hover:bg-red-100 dark:hover:bg-red-500/20 text-red-500 transition-all disabled:opacity-50"
+                        title="Delete"
+                      >
+                        {deleting === item.id ? (
+                          <span className="w-3 h-3 border-2 border-red-400 border-t-transparent rounded-full animate-spin" />
+                        ) : (
+                          <Trash2 className="w-3.5 h-3.5" />
+                        )}
+                      </button>
+                    </div>
                   </div>
                 </div>
               ))}
