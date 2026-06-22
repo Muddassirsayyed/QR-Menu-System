@@ -12,8 +12,9 @@ import {
   RefreshCw,
   Globe,
   Clock,
+  CalendarDays,
 } from "lucide-react";
-import { formatDate } from "@/lib/utils";
+import { formatDateShort, formatTimeOnly } from "@/lib/utils";
 
 type ScanLog = {
   id: string;
@@ -140,7 +141,7 @@ export default function ScansPage() {
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50">
-                {["Restaurant", "Time", "Device", "Browser / OS", "Location", "IP", "Visitor ID"].map((h) => (
+                {["Restaurant", "Date", "Timing", "Device", "Browser / OS", "Location", "IP", "Visitor ID"].map((h) => (
                   <th key={h} className="px-4 py-3 text-left text-xs font-semibold text-slate-500 uppercase tracking-wide">
                     {h}
                   </th>
@@ -150,7 +151,7 @@ export default function ScansPage() {
             <tbody>
               {scans.length === 0 && !loading ? (
                 <tr>
-                  <td colSpan={7} className="text-center py-16 text-slate-400">
+                  <td colSpan={8} className="text-center py-16 text-slate-400">
                     <ScanLine className="w-10 h-10 mx-auto mb-2 opacity-40" />
                     <p>No scan logs found</p>
                   </td>
@@ -173,8 +174,14 @@ export default function ScansPage() {
                     </td>
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-1.5 text-xs text-slate-500">
+                        <CalendarDays className="w-3 h-3" />
+                        {formatDateShort(scan.scannedAt)}
+                      </div>
+                    </td>
+                    <td className="px-4 py-3">
+                      <div className="flex items-center gap-1.5 text-xs text-slate-500">
                         <Clock className="w-3 h-3" />
-                        {formatDate(scan.scannedAt)}
+                        {formatTimeOnly(scan.scannedAt)}
                       </div>
                     </td>
                     <td className="px-4 py-3">

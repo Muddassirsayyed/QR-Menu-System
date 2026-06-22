@@ -29,9 +29,11 @@ export default function DashboardHeader() {
     document.documentElement.classList.toggle("dark", next);
   }
 
-  // Find matching page title
+  // Find matching page title (sorted by path length descending to ensure most specific match wins)
   const pageInfo =
-    Object.entries(pageTitles).find(([path]) => pathname === path || pathname.startsWith(path + "/"))?.[1] ||
+    Object.entries(pageTitles)
+      .sort((a, b) => b[0].length - a[0].length)
+      .find(([path]) => pathname === path || pathname.startsWith(path + "/"))?.[1] ||
     { title: "Dashboard", desc: "" };
 
   return (

@@ -27,6 +27,12 @@ export function formatDateShort(date: string | Date) {
   }).format(new Date(date));
 }
 
+export function formatTimeOnly(date: string | Date) {
+  return new Intl.DateTimeFormat("en-IN", {
+    timeStyle: "short",
+  }).format(new Date(date));
+}
+
 export function slugify(text: string) {
   return text
     .toLowerCase()

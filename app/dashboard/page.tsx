@@ -29,7 +29,7 @@ import {
   Bar,
   Legend,
 } from "recharts";
-import { formatDate } from "@/lib/utils";
+import { formatDateShort, formatTimeOnly } from "@/lib/utils";
 
 const CHART_COLORS = ["#f97316", "#3b82f6", "#10b981", "#8b5cf6", "#f59e0b", "#ec4899"];
 
@@ -377,7 +377,8 @@ export default function DashboardPage() {
             <thead>
               <tr className="border-b border-slate-100 dark:border-slate-700">
                 <th className="px-5 py-3 text-left text-xs font-medium text-slate-400">Restaurant</th>
-                <th className="px-5 py-3 text-left text-xs font-medium text-slate-400">Time</th>
+                <th className="px-5 py-3 text-left text-xs font-medium text-slate-400">Date</th>
+                <th className="px-5 py-3 text-left text-xs font-medium text-slate-400">Timing</th>
                 <th className="px-5 py-3 text-left text-xs font-medium text-slate-400">Device</th>
                 <th className="px-5 py-3 text-left text-xs font-medium text-slate-400">Browser</th>
                 <th className="px-5 py-3 text-left text-xs font-medium text-slate-400">Location</th>
@@ -395,7 +396,10 @@ export default function DashboardPage() {
                     </span>
                   </td>
                   <td className="px-5 py-3 text-xs text-slate-500">
-                    {formatDate(scan.scannedAt)}
+                    {formatDateShort(scan.scannedAt)}
+                  </td>
+                  <td className="px-5 py-3 text-xs text-slate-500">
+                    {formatTimeOnly(scan.scannedAt)}
                   </td>
                   <td className="px-5 py-3">
                     <span className="inline-flex items-center gap-1 text-xs">
